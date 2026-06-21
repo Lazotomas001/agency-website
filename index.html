@@ -700,11 +700,23 @@
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
   // Form submit (placeholder — wire to Formspree or your backend)
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    document.querySelector('.contact-form').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
-    // TODO: Replace with fetch() to Formspree endpoint or your backend
+    const form = e.target;
+    const data = new FormData(form);
+
+    const res = await fetch('https://formspree.io/f/xeebjddy', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      alert('Something went wrong. Please try again or email us directly.');
+    }
   }
 </script>
 </body>
